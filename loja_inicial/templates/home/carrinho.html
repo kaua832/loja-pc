@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras | Stilo Urbano</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #111;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #e63946;
+        }
+
+        .cart-link {
+            text-decoration: none;
+            color: #111;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .cart-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            color: #222;
+        }
+
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .cart-items {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            min-height: 200px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .item-img {
+            width: 70px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .item-details h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .item-price {
+            font-weight: bold;
+            color: #e63946;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .remove-btn:hover {
+            color: #e63946;
+        }
+
+        .cart-summary {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        .cart-summary h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .summary-row.total {
+            font-weight: bold;
+            font-size: 18px;
+            color: #111;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #e63946;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #d62828;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #666;
+            padding: 40px 0;
+            font-size: 16px;
+        }
+
+        footer {
+            background-color: #111;
+            color: #fff;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        footer p {
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- O '../' faz o navegador voltar uma pasta e achar a página inicial corretamente -->
+        <a href="/home" class="logo">STILO URBANO</a>
+        <nav>
+            <ul>
+                <li><a href="/home">Início</a></li>
+                <li><a href="../index.html#produtos">Coleção Completa</a></li>
+                <li><a href="#">Masculino</a></li>
+                <li><a href="#">Feminino</a></li>
+            </ul>
+        </nav>
+        <a href="carrinho.html" class="cart-link" id="cart-counter">🛒 Carrinho (0)</a>
+    </header>
+
+    <div class="cart-container">
+        <h2 class="section-title">Seu Carrinho de Compras</h2>
+        
+        <div class="cart-layout">
+            <div class="cart-items" id="lista-carrinho"></div>
+            <div class="cart-summary" id="resumo-carrinho"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Stilo Urbano. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        function carregarCarrinho() {
+            let carrinho = JSON.parse(localStorage.getItem('cart')) || [];
+            let listaContainer = document.getElementById('lista-carrinho');
+            let resumoContainer = document.getElementById('resumo-carrinho');
+            let contadorHeader = document.getElementById('cart-counter');
+
+            contadorHeader.innerText = `🛒 Carrinho (${carrinho.length})`;
+
+            if (carrinho.length === 0) {
+                listaContainer.innerHTML = '<p class="empty-cart">Seu carrinho está vazio.</p>';
+                resumoContainer.innerHTML = `
+                    <h3>Resumo do Pedido</h3>
+                    <div class="summary-row"><span>Subtotal</span><span>R$ 0,00</span></div>
+                    <div class="summary-row"><span>Frete</span><span>R$ 0,00</span></div>
+                    <div class="summary-row total"><span>Total</span><span>R$ 0,00</span></div>
+                    <button class="checkout-btn" onclick="alert('Seu carrinho está vazio!')" style="opacity: 0.5; cursor: not-allowed;">Finalizar Compra</button>
+                `;
+                return;
+            }
+
+            let htmlItens = '';
+            let subtotal = 0;
+
+            carrinho.forEach((item, index) => {
+                subtotal += item.price;
+                htmlItens += `
+                    <div class="cart-item">
+                        <div class="item-info">
+                            <img src="${item.image}" alt="${item.title}" class="item-img">
+                            <div class="item-details">
+                                <h4>${item.title}</h4>
+                                <span class="item-price">R$ ${item.price.toFixed(2).replace('.', ',')}</span>
+                            </div>
+                        </div>
+                        <button class="remove-btn" onclick="removerItem(${index})">Remover</button>
+                    </div>
+                `;
+            });
+
+            listaContainer.innerHTML = htmlItens;
+
+            let frete = 15.00;
+            let total = subtotal + frete;
+
+            resumoContainer.innerHTML = `
+                <h3>Resumo do Pedido</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>R$ ${subtotal.toFixed(2).replace('.', ',')}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Frete</span>
+                    <span>R$ ${frete.toFixed(2).replace('.', ',')}</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>R$ ${total.toFixed(2).replace('.', ',')}</span>
+                </div>
+                <button class="checkout-btn" onclick="finalizarCompra()">Finalizar Compra</button>
+            `;
+        }
+
+        function removerItem(index) {
+            let carrinho = JSON.parse(localStorage.getItem('cart')) || [];
+            carrinho.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(carrinho));
+            carregarCarrinho();
+        }
+
+        function finalizarCompra() {
+            alert('Compra finalizada com sucesso!');
+            localStorage.removeItem('cart');
+            carregarCarrinho();
+        }
+
+        window.onload = carregarCarrinho;
+
+        
+    </script>
+</body>
+</html>
