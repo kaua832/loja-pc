@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'loja_inicial',
-    'carrinho'
+    'carrinho',
+    'login',
+    'cadastro',
+    'painel',
+    'cadastro_produtos',
 ]
 
 MIDDLEWARE = [
@@ -122,8 +126,18 @@ STATIC_URL = 'static/'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+# MAILERS = {
+#    'default': {
+#        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+#    },
+#}
+
+# Configuração de E-mail (Gmail SMTP)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'samuelkaua563@gmail.com'        # Seu e-mail completo do Gmail
+EMAIL_HOST_PASSWORD = 'cqol ocya yxaq rwjy'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+

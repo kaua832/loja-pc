@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Produtos</title>
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="row g-4">
+        
+        <!-- Formulário de Cadastro e Edição -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">
+                        {% if produto_editando %}
+                            Editar Produto
+                        {% else %}
+                            Cadastrar Novo Produto
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+
+                    <!-- Exibição de mensagens -->
+                    {% if mensagem %}
+                        <div class="alert alert-{% if 'sucesso' in mensagem|lower %}success{% else %}warning{% endif %} alert-dismissible fade show" role="alert">
+                            {{ mensagem }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+
+                    <!-- Form de Cadastro / Edição -->
+                    <form action="{% if produto_editando %}{% url 'editar_produto' produto_editando.id %}{% else %}{% url 'cadastro_produtos' %}{% endif %}" method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="produto" class="form-label fw-bold">Nome do Produto</label>
+                            <input type="text" class="form-control" id="produto" name="produto" 
+                                   value="{{ produto_editando.nome|default:'' }}" placeholder="Ex: Teclado Mecânico" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="preco" class="form-label fw-bold">Preço (R$)</label>
+                            <input type="number" step="0.01" class="form-control" id="preco" name="preco" 
+                                   value="{{ produto_editando.preco|default:'' }}" placeholder="Ex: 199.90" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label fw-bold">Categoria</label>
+                            <input type="text" class="form-control" id="categoria" name="categoria" 
+                                   value="{{ produto_editando.categoria|default:'' }}" placeholder="Ex: Periféricos" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label fw-bold">Descrição</label>
+                            <textarea class="form-control" id="descricao" name="descricao" rows="3" 
+                                      placeholder="Detalhes sobre o produto...">{{ produto_editando.descricao|default:'' }}</textarea>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            {% if produto_editando %}
+                                <button type="submit" class="btn btn-warning text-white btn-lg">Salvar Alterações</button>
+                                <a href="{% url 'cadastro_produtos' %}" class="btn btn-outline-secondary">Cancelar Edição</a>
+                            {% else %}
+                                <button type="submit" class="btn btn-primary btn-lg">Cadastrar Produto</button>
+                            {% endif %}
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Listagem dos Produtos -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h4 class="mb-0">Produtos Cadastrados</h4>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped mb-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Preço</th>
+                                    <th>Categoria</th>
+                                    <th class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in produtos_lista %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ item.nome }}</strong>
+                                        {% if item.descricao %}
+                                            <br><small class="text-muted">{{ item.descricao|truncatewords:6 }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>R$ {{ item.preco }}</td>
+                                    <td><span class="badge bg-secondary">{{ item.categoria }}</span></td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <!-- Botão Editar -->
+                                            <a href=" " class="btn btn-outline-primary" title="Editar">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <!-- Botão Excluir: Redireciona para a página de confirmação de exclusão -->
+                                            <a href="{% url 'deletar_produtos' item.id %}" class="btn btn-outline-danger" title="Remover">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-muted">Nenhum produto cadastrado até o momento.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/bootstrap.bundle.min.js"></script>
+</body>
+</html>
